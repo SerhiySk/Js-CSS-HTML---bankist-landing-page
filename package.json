@@ -6,7 +6,7 @@
   "main": "dist/main.js",
   "scripts": {
     "start": "parcel index.html",
-    "build": "parcel build"
+    "build": "parcel build index.html --dist-dir ./dist"
   },
   "author": "",
   "license": "ISC",
