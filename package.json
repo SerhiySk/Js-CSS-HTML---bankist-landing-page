@@ -3,8 +3,9 @@
   "version": "1.0.0",
   "description": "",
   "source": "index.html",
+  "main": "dist/main.js",
   "scripts": {
-    "start": "parcel",
+    "start": "parcel index.html",
     "build": "parcel build"
   },
   "author": "",
@@ -12,5 +13,8 @@
   "devDependencies": {
     "parcel": "^2.8.3",
     "parcel-plugin-data-src": "^1.0.1"
+  },
+  "dependencies": {
+    "core-js": "^3.30.2"
   }
 }
