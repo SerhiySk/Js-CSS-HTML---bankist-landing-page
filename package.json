@@ -2,10 +2,10 @@
   "name": "bankist-homepage",
   "version": "1.0.0",
   "description": "",
-  "default": "index.html",
+  "source": "index.html",
   "scripts": {
-    "start": "parcel index.html",
-    "build": "parcel build index.html --dist-dir ./dist"
+    "start": "parcel",
+    "build": "parcel build"
   },
   "author": "",
   "license": "ISC",
