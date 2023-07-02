@@ -1,4 +1,6 @@
 'use strict';
+import micImg from './img/mic.png';
+import micCrossedImg from './img/mic-crossed.png';
 
 ///////////////////////////////////////
 // Modal window
@@ -248,3 +250,80 @@ Array.prototype.unique = function () {
 };
 console.log(arr.unique());
 console.log([...new Set(arr)]);
+
+const textInputContainer = document.querySelector('.text-input');
+const textInput = textInputContainer.querySelector('input'); // <=> document.querySelector("#search-form input");
+
+// The speech recognition interface lives on the browser’s window object
+const SpeechRecognition =
+  window.SpeechRecognition || window.webkitSpeechRecognition; // if none exists -> undefined
+
+if (SpeechRecognition) {
+  console.log('Your Browser supports speech Recognition');
+
+  const recognition = new SpeechRecognition();
+  recognition.continuous = true;
+  // recognition.lang = "en-US";
+
+  textInputContainer.insertAdjacentHTML(
+    'beforeend',
+    `<button type="button"><img src=${micImg} alt="" class="microphone" /></button>`
+  );
+
+  const micBtn = textInputContainer.querySelector('button');
+  const micIcon = micBtn.firstElementChild;
+
+  micBtn.addEventListener('click', micBtnClick);
+  function micBtnClick() {
+    if (micIcon.classList.contains('microphone')) {
+      // Start Voice Recognition
+      recognition.start(); // First time you have to allow access to mic!
+    } else {
+      recognition.stop();
+    }
+  }
+
+  recognition.addEventListener('start', startSpeechRecognition); // <=> recognition.onstart = function() {...}
+  function startSpeechRecognition() {
+    micIcon.classList.remove('microphone');
+    micIcon.classList.add('microphone-crossed');
+    micIcon.src = micCrossedImg;
+    textInput.focus();
+    console.log('Voice activated, SPEAK');
+  }
+
+  recognition.addEventListener('end', endSpeechRecognition); // <=> recognition.onend = function() {...}
+  function endSpeechRecognition() {
+    micIcon.src = micImg;
+    micIcon.classList.remove('microphone-crossed');
+    micIcon.classList.add('microphone');
+  }
+
+  recognition.addEventListener('result', resultOfSpeechRecognition); // <=> recognition.onresult = function(event) {...} - Fires when you stop talking
+  function resultOfSpeechRecognition(event) {
+    const current = event.resultIndex;
+    const transcript = event.results[current][0].transcript;
+
+    if (transcript.toLowerCase().trim() === 'stop recording') {
+      recognition.stop();
+    } else if (!textInput.value) {
+      textInput.value = transcript;
+    } else {
+      if (transcript.toLowerCase().trim() === 'go') {
+        textInputContainer.submit();
+      } else if (transcript.toLowerCase().trim() === 'reset input') {
+        textInput.value = '';
+      } else {
+        textInput.value = transcript;
+      }
+    }
+    // textInput.value = transcript;
+    // textInput.focus();
+    // setTimeout(() => {
+    //   textInputContainer.submit();
+    // }, 500);
+  }
+} else {
+  console.log('Your Browser does not support speech Recognition');
+  info.textContent = 'Your Browser does not support Speech Recognition';
+}
